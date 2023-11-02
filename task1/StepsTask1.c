@@ -51,11 +51,8 @@ FILE *open_file(char filename[], char mode[]) {
     return file;
 }
 
-// Complete the main function
-int main() {
-    //open my file
-    char filename[] = "FitnessData_2023.csv";
-    char mode[] = "r";
+//function to find how many items are in file
+int find_items(char filename[], char mode[]){
     FILE *file = open_file(filename, mode);
 
     //read file and work out how many records there are in the file
@@ -65,10 +62,21 @@ int main() {
     while (fgets(line_buffer,buffer_size,file) != NULL){
         count++;
     }
-    //print out the number of records in the file
-    printf("%d\n",count);
     //close file so it can be opened again from the start
     fclose(file);
+    return count;
+}
+
+// Complete the main function
+int main() {
+    //open my file
+    char filename[] = "FitnessData_2023.csv";
+    char mode[] = "r";
+
+    //read file and work out how many records there are in the file
+    int count = find_items(filename,mode);
+    //print out the number of records in the file
+    printf("%d\n",count);
 
     //create a structured array
     FITNESS_DATA my_data[count];
@@ -80,6 +88,8 @@ int main() {
     char steps[10];
     //make a counter variable 
     int counter = 0;
+    int buffer_size = 100;
+    char line_buffer[buffer_size];
     while (fgets(line_buffer,buffer_size,new_file) != NULL){
         tokeniseRecord(line_buffer,",",date,time,steps);
         strcpy(my_data[counter].date, date);
@@ -88,15 +98,10 @@ int main() {
         counter++;        
     }
 
-    //print out the rows with the slashes
+    //print out first three rows with the slashes
     for (int i = 0; i < 3; i++){
         printf("%s/%s/%d\n",my_data[i].date, my_data[i].time, my_data[i].steps);
     }
 
-
-
-
-
     return 0;
-
 }
