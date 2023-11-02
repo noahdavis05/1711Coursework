@@ -76,7 +76,7 @@ int main() {
     //read file and work out how many records there are in the file
     int count = find_items(filename,mode);
     //print out the number of records in the file
-    printf("%d\n",count);
+    printf("Number of records in file: %d\n",count);
 
     //create a structured array
     FITNESS_DATA my_data[count];
