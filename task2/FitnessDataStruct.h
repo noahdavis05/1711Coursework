@@ -155,9 +155,10 @@ int longest_period(char filename[]){
 	int pointers[100];
 	int pointers_pointer = 0;
 	for (int i =0; i < count; i ++) {
-		if (my_data[i].steps >= 500){
+		if (my_data[i].steps > 500){
 			pointers[pointers_pointer] = i;
 			pointers_pointer += 1;
+			printf("%d\n",i);
 		}
 	}
 
@@ -171,12 +172,14 @@ int longest_period(char filename[]){
 
 	for (int i = 0; i < pointers_pointer -1 ; i++){
 		if (pointers[i] + 1 == pointers[i + 1]){
-			if (temp_streak == 1){
+			if (temp_streak == 1){ //check if the streak is at one if so set the temporary start pointer
 				temp_pos = pointers[i];
 			}
-			temp_streak += 1;
-			if (i == pointers_pointer -2 ){
-				end_pos = pointers[pointers_pointer -1];
+			temp_streak += 1; //increment the streak counter
+			if (i == pointers_pointer -2 ){ //check if counter has gotten to item before end of list if the current streak is still going
+				if (temp_streak >= longest_streak){
+					end_pos = pointers[pointers_pointer -1];
+				}
 			}
 		} else{
 			if (temp_streak >= longest_streak){
@@ -185,11 +188,13 @@ int longest_period(char filename[]){
 				end_pos = pointers[i];
 				start_pos = temp_pos;
 
+			} else {
+				temp_streak = 1;
 			}
 		}
 	}
 
-	printf("%d %d \n",start_pos, end_pos);
+	printf("Longest period start: %s %s\nLongest period end: %s %s\n",my_data[start_pos].date, my_data[start_pos].time, my_data[end_pos].date, my_data[end_pos].time);
 	
 	return 0;
 }
