@@ -51,6 +51,8 @@ int main() {
     int count;
     char low_date[15];
     int fewest_steps;
+    int mean;
+    char my_string[200];
     // make a while loop to contain the switch case statement so that it can be done multiple times
     while (cont == 0){
         // print out options for user to choose
@@ -86,28 +88,30 @@ int main() {
             case 'b':
             // specify the number of lines in the file
                 count = count_items(filename,"r");
-                printf("%d\n",count);
+                printf("Total records: %d\n",count);
                 break;
 
             case 'C':
             case 'c':
                 //create a structured array
-                count = count_items(filename,"r");
+                high_low_date(filename,0);
                 break;
 
             case 'D':
             case 'd':
-                printf("d");
+                high_low_date(filename,1);
                 break;
 
             case 'E':
             case 'e':
-                printf("e");
+                mean = calc_mean(filename);
+                printf("Mean step count: %d\n",mean);
                 break;
 
             case 'F':
             case 'f':
-                printf("f");
+                longest_period(filename);
+                
                 break;
 
             case 'Q':
