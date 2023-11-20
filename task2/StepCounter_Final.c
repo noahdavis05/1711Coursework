@@ -117,7 +117,6 @@ int main() {
             case 'Q':
             case 'q':
                 cont = 1;
-                printf("q");
                 break;
 
         // if they type anything else:
