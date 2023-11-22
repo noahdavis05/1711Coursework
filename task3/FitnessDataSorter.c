@@ -14,12 +14,14 @@ void tokeniseRecord(const char *input, const char *delimiter,
                     char *date, char *time, char *steps) {
     // Create a copy of the input string as strtok modifies the string
     char *inputCopy = strdup(input);
+    int i;
     
     // Tokenize the copied string
     char *token = strtok(inputCopy, delimiter);
-    if (token != NULL) {        strcpy(date, token);
+    if (token != NULL) {
+        strcpy(date, token);
     } else {
-        printf("1");
+        printf("Error: invalid file\n");
         exit(1);
     }
     
@@ -27,7 +29,7 @@ void tokeniseRecord(const char *input, const char *delimiter,
     if (token != NULL) {
         strcpy(time, token);
     } else{
-        printf("2");
+        printf("Error: invalid file\n");
         exit(1);
     }
     
@@ -35,7 +37,7 @@ void tokeniseRecord(const char *input, const char *delimiter,
     if (token != NULL) {
         strcpy(steps, token);
     } else {
-        printf("3");
+        printf("Error: invalid file\n");
         exit(1);
     }
     
@@ -49,7 +51,7 @@ void tokeniseRecord(const char *input, const char *delimiter,
 FILE *open_file(char filename[], char mode[]) {
     FILE *file = fopen(filename, mode);
     if (file == NULL) {
-        perror("");
+        printf("Error: invalid file\n");
         exit(1);
     }
     return file;
@@ -69,6 +71,18 @@ int count_items(char filename[], char mode[]){
     //close file so it can be opened again from the start
     fclose(file);
     return count;
+}
+
+//converts my string into an int
+//copied from stack overflow
+char *my_itoa(int num, char *str)
+{
+        if(str == NULL)
+        {
+                return NULL;
+        }
+        sprintf(str, "%d", num);
+        return str;
 }
 
 
@@ -97,8 +111,45 @@ int main() {
 		my_data[counter].steps = atoi(steps);
 		counter++;
 	}   
+    fclose(file);
 
-    printf("  got hjere");
+    //sort the data
+    FitnessData temp;
+    for (int i = 0; i < count - 1; i ++){
+        for (int j = 0; j < count - i; j ++){
+            if (my_data[j].steps < my_data[j + 1].steps){
+                temp = my_data[j + 1];
+                my_data[j + 1] = my_data[j];
+                my_data[j] = temp;
+            }
+        }
+    }
+
+
+
+    //open new file so that it can be written to
+    strcat(filename,".tsv");
+    FILE *new_file = open_file(filename,"w");
+
+    char temp_string[300];
+    char temp_num[40];
+    for (int i = 0; i < count; i ++){
+        fprintf(new_file, "%s",my_data[i].date);
+        fprintf(new_file, "\t");
+        fprintf(new_file,"%s",my_data[i].time);
+        fprintf(new_file,"\t");
+        my_itoa(my_data[i].steps,temp_num);
+        fprintf(new_file,"%s",temp_num);
+        if (i < count -1){
+            fprintf(new_file,"\n");
+        }
+    }
+
+    fclose(new_file);
+
+    printf("Data sorted and written to %s\n",filename);
+    return(0);
+
 
     
 }
