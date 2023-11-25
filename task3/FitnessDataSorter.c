@@ -10,7 +10,7 @@ typedef struct {
 } FitnessData;
 
 // Function to tokenize a record
-void tokeniseRecord(const char *input, const char *delimiter,
+int tokeniseRecord(const char *input, const char *delimiter,
                     char *date, char *time, char *steps) {
     // Create a copy of the input string as strtok modifies the string
     char *inputCopy = strdup(input);
@@ -19,41 +19,55 @@ void tokeniseRecord(const char *input, const char *delimiter,
     // Tokenize the copied string
     char *token = strtok(inputCopy, delimiter);
     if (token != NULL) {
-        strcpy(date, token);
+        for (i = 0; token[i] != '\0'; ++i);
+        if (i == 10){ 
+            strcpy(date, token);
+        } else {
+            printf("Error: invalid file\n");
+            return 1;
+        }
     } else {
         printf("Error: invalid file\n");
-        exit(1);
+        return 1;
     }
     
     token = strtok(NULL, delimiter);
     if (token != NULL) {
+        for (i = 0; token[i] != '\0'; ++i);
+        if (i == 5){ 
         strcpy(time, token);
+        } else {
+            printf("Error: invalid file\n");
+            return 1;
+        }
     } else{
         printf("Error: invalid file\n");
-        exit(1);
+        return 1;
     }
     
     token = strtok(NULL, delimiter);
     if (token != NULL) {
-        strcpy(steps, token);
-    } else {
+            strcpy(steps, token);
+        }
+    else {
         printf("Error: invalid file\n");
-        exit(1);
+        return 1;
     }
     
+    if (*steps == '\r'){
+        printf("Error: invalid file\n");
+        return 1;
+    }
     // Free the duplicated string
     free(inputCopy);
 
+    return 0;
     }
 
 
 //funciton to open a file
 FILE *open_file(char filename[], char mode[]) {
     FILE *file = fopen(filename, mode);
-    if (file == NULL) {
-        printf("Error: invalid file\n");
-        exit(1);
-    }
     return file;
 }
 
@@ -88,9 +102,17 @@ char *my_itoa(int num, char *str)
 
 
 int main() {
+    int success;
     char filename[100];
     printf("Enter Filename: ");
     scanf("%s",filename);
+    //check filename is valid and return 1 if not
+    FILE *temp_file = fopen(filename,"r");
+    if (temp_file == NULL){
+        printf("Error: invalid file\n");
+        return 1;
+    }
+    fclose(temp_file);
     FILE *file = open_file(filename,"r");
     int count = count_items(filename,"r");
 
@@ -105,7 +127,10 @@ int main() {
 	char line_buffer[buffer_size];
 	//adding data
 	while (fgets(line_buffer,buffer_size,file) != NULL){
-		tokeniseRecord(line_buffer,",",date,time,steps);
+		success = tokeniseRecord(line_buffer,",",date,time,steps);
+        if (success == 1){
+            return 1;
+        }
 		strcpy(my_data[counter].date, date);
 		strcpy(my_data[counter].time,time);
 		my_data[counter].steps = atoi(steps);
@@ -140,9 +165,8 @@ int main() {
         fprintf(new_file,"\t");
         my_itoa(my_data[i].steps,temp_num);
         fprintf(new_file,"%s",temp_num);
-        if (i < count -1){
-            fprintf(new_file,"\n");
-        }
+        fprintf(new_file,"\n");
+        
     }
 
     fclose(new_file);
@@ -151,5 +175,5 @@ int main() {
     return(0);
 
 
-    
+
 }

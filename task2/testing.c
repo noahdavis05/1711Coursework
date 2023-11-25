@@ -2,27 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Function declaration
-void modifyString(char *str);
+
+int round_float(float number){
+	int temp_int = (int)number;
+	float temp_float = number - temp_int;
+	if (temp_float < 0.5){
+		return temp_int;
+	} else {
+		return temp_int + 1;
+	}
+}
 
 int main() {
     // Example usage
-    char myString[] = "Hello, World!";
-    
-    // Print the original string
-    printf("Original String: %s\n", myString);
-
-    // Call the function to modify the string
-    modifyString(myString);
-
-    // Print the modified string
-    printf("Modified String: %s\n", myString);
+    int rounded1 = round_float(12.34);
+    int rounded2 = round_float(12.5); 
+    printf("%d %d",rounded1,rounded2);
 
     return 0;
 }
 
-// Function definition
-void modifyString(char *str) {
-    // Modify the string in-place
-    strcat(str, " Have a great day!");
-}

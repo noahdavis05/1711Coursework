@@ -47,6 +47,7 @@ int main() {
     char my_option[100];
     char option;
     char filename[100];
+    int a_done = 0;
     int i;
     int count;
     char low_date[15];
@@ -71,6 +72,7 @@ int main() {
         switch (option){
             case 'A':
             case 'a':
+                a_done = 1;
                 printf("Input filename: ");
                 scanf("%s",filename);
                 getchar(); // Consume the newline character
@@ -87,31 +89,40 @@ int main() {
             case 'B':
             case 'b':
             // specify the number of lines in the file
-                count = count_items(filename,"r");
-                printf("Total records: %d\n",count);
+                if (a_done == 1){
+                    count = count_items(filename,"r");
+                    printf("Total records: %d\n",count);
+                    }
                 break;
 
             case 'C':
             case 'c':
+            if (a_done == 1){
                 //create a structured array
                 high_low_date(filename,0);
+            }
                 break;
 
             case 'D':
             case 'd':
+            if (a_done == 1){
                 high_low_date(filename,1);
+            }
                 break;
 
             case 'E':
             case 'e':
+                if (a_done == 1){
                 mean = calc_mean(filename);
                 printf("Mean step count: %d\n",mean);
+                    }
                 break;
 
             case 'F':
             case 'f':
+            if (a_done == 1){
                 longest_period(filename);
-                
+            }
                 break;
 
             case 'Q':

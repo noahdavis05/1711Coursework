@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
+
 
 #ifndef FITNESS_DATA_STRUCT_H
 #define FITNESS_DATA_STRUCT_H
@@ -92,6 +92,16 @@ int high_low_date(char filename[], int mode){
 	return 0;
 }
 
+int round_float(float number){
+	int temp_int = (int)number;
+	float temp_float = number - temp_int;
+	if (temp_float < 0.5){
+		return temp_int;
+	} else {
+		return temp_int + 1;
+	}
+}
+
 int calc_mean(char filename[]){
 	int count;
 	count = count_items(filename,"r");
@@ -121,7 +131,7 @@ int calc_mean(char filename[]){
 	double myDouble1 = (double)total_sum;
 	double myDouble2 = (double)count;
 	double mean = myDouble1/ myDouble2;
-	int rounded = round(mean);
+	int rounded = round_float(mean);
 	return rounded;
 }
 
@@ -158,7 +168,6 @@ int longest_period(char filename[]){
 		if (my_data[i].steps > 500){
 			pointers[pointers_pointer] = i;
 			pointers_pointer += 1;
-			printf("%d\n",i);
 		}
 	}
 
